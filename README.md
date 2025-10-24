@@ -5,7 +5,7 @@
 ---
 
 ## Overview
-This project contains a CKF-based state estimation and control simulation for a multi-UGV team running in the Robotarium environment. It includes event-triggered communication logic, shadow measurements, attack simulation (FDI and DoS), control barrier functions (CBF) to avoid collisions, and leader/follower controllers (Stanley/pure pursuit style). The main file is `CKF_Adversary (3).py`. :contentReference[oaicite:0]{index=0}
+This project contains a CKF-based state estimation and control simulation for a multi-UGV team running in the Robotarium environment. It includes event-triggered communication logic, shadow measurements, attack simulation (FDI and DoS), control barrier functions (CBF) to avoid collisions, and leader/follower controllers (Stanley/pure pursuit style). The main file is `CKF_Adversary.py`. :contentReference[oaicite:0]{index=0}
 
 ---
 
