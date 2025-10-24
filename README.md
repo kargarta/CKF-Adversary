@@ -3,8 +3,7 @@
 [![Python](https://img.shields.io/badge/python-3.8%2B-blue.svg)]()
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)]()
 
-**Repository name:** `ckf-adversary-robotarium`  
-**Main script:** `ckf_adversary.py` (renamed from original)
+**Main script:** `ckf_adversary.py`
 
 ---
 
