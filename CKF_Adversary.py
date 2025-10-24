@@ -105,7 +105,7 @@ CONFIG = {
     "COMMUNICATION_THRESHOLD": 0.7,
     "MAX_DOS_ROBOTS": 5,
     "MAX_FDI_MEASUREMENTS": 5,
-    "ZONE_RADIUS": 0.3,  # Radius of the circular danger zone in 2x2 area
+    "ZONE_RADIUS": 0.0001,  # Radius of the circular danger zone in 2x2 area
     "ZONE_LAYERS": 5,  # Number of layers in the danger zone
     "BASE_ATTACK_PROB": 0.2  # Base probability at the outermost layer
 
@@ -308,7 +308,7 @@ def generate_cubature_points(P_upd, x_est):
     P_upd = (P_upd + P_upd.T) / 2
     
     # Ensure positive definiteness with stricter threshold
-    min_threshold = 1e-13
+    min_threshold = 1e-12
     eigenvalues, V = np.linalg.eigh(P_upd)
     
     # Log for debugging purposes
@@ -489,7 +489,7 @@ def measurement_update(x_hat_pred, P_pred, measurement, R, predicted_nearby_posi
 
 
 
-    gamma_sensing = sensing_attack_detected(innovation_regular, threshold=0.3, steps_for_attack=1)
+    gamma_sensing = sensing_attack_detected(innovation_regular, threshold=0.01, steps_for_attack=1)
 
     Attack_detection_sensing = 1 - np.repeat(gamma_sensing, 2)
 
@@ -500,11 +500,11 @@ def measurement_update(x_hat_pred, P_pred, measurement, R, predicted_nearby_posi
 
 
     # Call the event_triggered function with the new parameters
-    flags, events = event_triggered(innovation_regular, previous_innovation, L, D_s=D_s, D_c=D_c, alpha=0.001, gamma=0.1, delta_0=1)
+    flags, events = event_triggered(innovation_regular, previous_innovation, L, D_s=D_s, D_c=D_c, alpha=0.01, gamma=0.1, delta_0=1)
 
 
     # State and covariance update
-    x_hat_updated = x_hat_pred + K_regular @ ( Attack_detection_sensing* events* innovation_regular)
+    x_hat_updated = x_hat_pred + K_regular @ (events * innovation_regular)
     #if shadow_measurement_points.size > 0:
         #x_hat_updated += K_shadow @ (shadow_measurement - shadow_z_hat_pred)
 
@@ -1473,8 +1473,8 @@ def run_simulation(robotarium_env, CONFIG, x_hat, P, positions,
         leader_path_marker = r.axes.plot(leader_path[0], leader_path[1], 'ro')
  
                 # Danger zone centers
-        center_comm = np.array([-0.3, 0.3])  # Communication Danger Zone Center
-        center_sense = np.array([0.3, 0.3])  # Sensing Danger Zone Center
+        center_comm = np.array([-0.5, 0.5])  # Communication Danger Zone Center
+        center_sense = np.array([0.5, 0.2])  # Sensing Danger Zone Center
 
                 # Communication danger zone calculations
         ground_truth_2d = ground_truth[:2, :]
@@ -1730,7 +1730,7 @@ def run_simulation(robotarium_env, CONFIG, x_hat, P, positions,
     # Finalizing the simulation
     logging.debug(f"Final step {step}: current positions {positions}")
     plot_final_states(ground_truth_positions, estimated_positions,  CONFIG["TOTAL_ROBOTS"], CONFIG["num_steps"])
-    plot_event_trigger(Event_Trigger, CONFIG["TOTAL_ROBOTS"], CONFIG["num_steps"], Neighbors)
+    #plot_event_trigger(Event_Trigger, CONFIG["TOTAL_ROBOTS"], CONFIG["num_steps"], Neighbors)
     print(Event_Trigger, "Event_Trigger")
     comm_rate = compute_comm_rate(Event_Trigger, CONFIG["TOTAL_ROBOTS"], CONFIG["num_steps"])
     print(f"Average Communication Rate: {comm_rate:.2f}")
